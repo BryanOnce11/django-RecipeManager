@@ -1,0 +1,65 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+    <title>Profile</title>
+</head>
+
+<body>
+    <header>
+        <h1><img src="{% static 'images/logos.png' %}" alt="Logo">Recipe Manager</h1>
+        <nav>
+            <ul>
+                <li><a href="{% url 'index' %}">Home</a></li>
+                <li><a href="{% url 'add_recipe' %}">Recipe</a></li>
+                <li><a href="{% url 'categories' %}">Categories</a></li>
+                <li><a href="{% url 'favorites' %}">Favorites</a></li>
+                <li><a href="{% url 'profile' %}" class="active">Profile</a></li>
+                <li><a href="{% url 'logout' %}">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="profile">
+            {% if user %}
+                <h2>Welcome, {{ user.user_name }}!</h2>
+                <p>Email: {{ user.email }}</p>
+                
+                <h3>My Recipes</h3>
+                {% if recipes %}
+                    <ul>
+                        {% for recipe in recipes %}
+                            <li><a href="{% url 'view_recipe' recipe_id=recipe.recipe_id %}">{{ recipe.recipe_name }}</a></li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>You haven't added any recipes yet.</p>
+                {% endif %}
+                
+                <h3>My Favorites</h3>
+                {% if favorites %}
+                    <ul>
+                        {% for favorite in favorites %}
+                            <li><a href="{% url 'view_recipe' recipe_id=favorite.recipe.recipe_id %}">{{ favorite.recipe.recipe_name }}</a></li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>You haven't added any favorites yet.</p>
+                {% endif %}
+            {% else %}
+                {% url 'index' as index_url %}
+                <script>window.location.href = "{{ index_url }}";</script>
+            {% endif %}
+        </div>
+    </main>
+</body>
+
+</html>

@@ -1,0 +1,61 @@
+{% load static %}
+{% load custom_filter %}
+{% load recipe_tags %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <title>View Recipe</title>
+</head>
+
+<body>
+    <header>
+        <h1><img src="{% static 'images/logos.png' %}" alt="Logo">Recipe Manager</h1>
+        <nav>
+            <ul>
+                <li><a href="{% url 'index' %}">Home</a></li>
+                <li><a href="{% url 'add_recipe' %}">Recipe</a></li>
+                <li><a href="{% url 'categories' %}">Categories</a></li>
+                <li><a href="{% url 'favorites' %}">Favorites</a></li>
+                <li><a href="{% url 'profile' %}" class="active">Profile</a></li>
+                <li><a href="{% url 'logout' %}">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="recipe-container">
+            {% if recipe %}
+                <div class="recipe">
+                    <h3>{{ recipe.recipe_name }}</h3>
+                    <img src="{{ recipe.image.url }}" alt="{{ recipe.recipe_name }}">
+                    <p class="description">Description: <br>{{ recipe.description }}</p>
+                    <p>Preparation Time: {{ recipe.prep_time }} minutes</p>
+                    <p>Servings: {{ recipe.servings }}</p>
+                    <p>Ingredients:</p>
+                    <ul>
+                      {% for ingredient in recipe.ingredients|split_by_comma %}
+                      <li>{{ ingredient }}</li>
+                      {% endfor %}
+                    </ul>
+                    <p>Instructions:</p>
+                    <ol>
+                      {% for ingredient in recipe.ingredients|split_by_comma %}
+                      <li>{{ ingredient }}</li>
+                      {% endfor %}
+                    </ol>
+                    <p class="created-by">Created by: {% if recipe.user %}{{ recipe.user.user_name }}{% else %}Anonymous{% endif %}</p>
+                </div>
+            {% else %}
+                <p>No recipe found.</p>
+            {% endif %}
+        </div>
+    </main>
+</body>
+
+</html>

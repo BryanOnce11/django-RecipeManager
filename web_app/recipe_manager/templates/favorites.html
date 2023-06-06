@@ -1,0 +1,74 @@
+{% load static %}
+{% load custom_filter %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <title>Favorites</title>
+    <style>
+        h2 {
+            text-align: center;
+            font-size: 2em;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1><img src="{% static 'images/logos.png' %}" alt="Logo">Recipe Manager</h1>
+        <nav>
+            <ul>
+                <li><a href="{% url 'index' %}">Home</a></li>
+                <li><a href="{% url 'add_recipe' %}">Recipe</a></li>
+                <li><a href="{% url 'categories' %}">Categories</a></li>
+                <li><a href="{% url 'favorites' %}" class="active">Favorites</a></li>
+                <li><a href="{% url 'profile' %}">Profile</a></li>
+                <li><a href="{% url 'logout' %}">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div id="recipeContainer" class="recipe-container">
+            {% for favorite in favorite_recipes %}
+            <div class="recipe">
+                <h3>{{ favorite.recipe.recipe_name }}</h3>
+                <img src="{{ favorite.recipe.image.url }}" alt="{{ favorite.recipe.recipe_name }}">
+                <p class="description">Description: <br>{{ recipe.description }}</p>
+                <p>Prep Time: {{ favorite.recipe.prep_time }} minutes</p>
+                <p>Servings: {{ favorite.recipe.servings }}</p>
+                <p>Ingredients:</p>
+                <ul>
+                    {% for ingredient in favorite.recipe.ingredients|split_by_comma %}
+                    <li>{{ ingredient }}</li>
+                    {% endfor %}
+                </ul>
+                <p>Instructions:</p>
+                <ol>
+                    {% for step in favorite.recipe.instructions|split_by_comma %}
+                    <li>{{ step }}</li>
+                    {% endfor %}
+                </ol>
+                <p class="created-by">Created by: {% if favorite.recipe.user_id %}
+                    {{ favorite.recipe.user.user_name }}
+                    {% else %}
+                    Anonymous
+                    {% endif %}
+                </p>
+                {% if favorite.rating == 0 %}
+                <a href="{% url 'add_review' %}?recipe_id={{ favorite.recipe.recipe_id }}">Add Review</a>
+                {% endif %}
+            </div>
+            {% empty %}
+            <p>No favorite recipes found for this user.</p>
+            {% endfor %}
+        </div>
+    </main>
+</body>
+
+</html>

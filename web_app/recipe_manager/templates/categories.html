@@ -1,0 +1,85 @@
+{% load static %}
+{% load custom_filter %}
+{% load recipe_tags %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/categ.css' %}">
+    <title>Categories</title>
+</head>
+
+<body>
+    <header>
+        <h1><img src="{% static 'images/logos.png' %}" alt="Logo">Recipe Manager</h1>
+        <nav>
+            <ul>
+                <li><a href="{% url 'index' %}">Home</a></li>
+                <li><a href="{% url 'add_recipe' %}">Recipe</a></li>
+                <li><a href="{% url 'categories' %}" class="active">Categories</a></li>
+                <li><a href="{% url 'favorites' %}">Favorites</a></li>
+                <li><a href="{% url 'profile' %}">Profile</a></li>
+                <li><a href="{% url 'logout' %}">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h2>Recipe Categories</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <select id="categorySelect" name="category_id">
+                {% for category in categories %}
+                    <option value="{{ category.category_id }}">{{ category.category_name }}</option>
+                {% endfor %}
+            </select>
+            <input type="submit" value="Submit">
+        </form>
+        {% if recipes %}
+            <div class="recipe-container">
+                {% for recipe in recipes %}
+                    <div class="recipe">
+                        <h3>{{ recipe.recipe_name }}</h3>
+                        <img src="{{ recipe.image.url }}" alt="{{ recipe.recipe_name }}">
+                        <p class="description">Description: <br>{{ recipe.description }}</p>
+                        <p>Prep Time: {{ recipe.prep_time }} minutes</p>
+                        <p>Servings: {{ recipe.servings }}</p>
+                        <p>Ingredients:</p>
+                        <ul>
+                            {% for ingredient in recipe.ingredients|split_by_comma %}
+                                <li>{{ ingredient }}</li>
+                            {% endfor %}
+                        </ul>
+                        <p>Instructions:</p>
+                        <ol>
+                            {% for step in recipe.instructions|split_by_comma %}
+                                <li>{{ step }}</li>
+                            {% endfor %}
+                        </ol>
+                        <div class="com">
+                            <p>Comments</p>
+                            {% get_comments recipe.recipe_id as comments %}
+                            {% if comments %}
+                                {% for comment in comments %}
+                                    <div class="comment">
+                                        <p class="username">{{ comment.user.user_name }}:</p>
+                                        <p class="comment-text">{{ comment.comment }}</p>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        <p class="created-by">Created by: {% if recipe.user %}{{ recipe.user.user_name }}{% else %}Anonymous{% endif %}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </main>
+</body>
+
+</html>
