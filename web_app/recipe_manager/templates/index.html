@@ -43,15 +43,15 @@
                     <p>Ingredients:</p>
                     <ul>
                         {% for ingredient in recipe.ingredients|split_by_comma %}
-                            <li>{{ ingredient }}</li>
+                        <li>{{ ingredient|strip }}</li>
                         {% endfor %}
-                    </ul>
+                      </ul>
                     <p>Instructions:</p>
                     <ol>
-                        {% for ingredient in recipe.ingredients|split_by_comma %}
-                            <li>{{ ingredient }}</li>
+                        {% for instructions in recipe.instructions|split_by_comma %}
+                        <li>{{ instructions |strip }}</li>
                         {% endfor %}
-                    </ol>
+                      </ol>
                     <div class="rate">
                         {% if request.session.user_id %}
                           {% with recipe_id=recipe.recipe_id user_id=request.session.user_id %}
