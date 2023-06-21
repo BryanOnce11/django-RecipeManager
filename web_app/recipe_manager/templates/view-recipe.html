@@ -40,13 +40,13 @@
                     <p>Ingredients:</p>
                     <ul>
                         {% for ingredient in recipe.ingredients|split_by_comma %}
-                        <li>{{ ingredient|strip }}</li>
+                        <li>{{ ingredient}}</li>
                         {% endfor %}
                       </ul>
                     <p>Instructions:</p>
                     <ol>
                         {% for instructions in recipe.instructions|split_by_comma %}
-                        <li>{{ instructions |strip }}</li>
+                        <li>{{ instructions}}</li>
                         {% endfor %}
                       </ol>
                     <p class="created-by">Created by: {% if recipe.user %}{{ recipe.user.user_name }}{% else %}Anonymous{% endif %}</p>
